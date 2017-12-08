@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html data-ng-app="spotsAPI">
+<head>
+<meta http-equiv="Content-Type"
+	content="text/html; charset=windows-1252" />
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+<script
+	src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script>
+<script
+	src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.1.0.js"></script>
+<link
+	href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet" href="style.css" />
+<script src="app.js"></script>
+<script src="controller.js"></script>
+<title>main</title>
+</head>
+<body data-ng-controller="spotsAPIController">
+<div data-ng-show="halt==false"  class="loading">
+<img data-ng-src="http://www.webdevelopmenthelp.net/wp-content/uploads/2015/04/loading.gif" class="loading-image"/>
+</div>
+	<div class="main" data-ng-show="halt==true">
+		<div class="search" title="Search">
+			<label> <strong>Search By Field:</strong>
+			</label>&nbsp;<br /> <br />
+			<div class="container-3">
+
+				<select class="select-control" data-ng-model="queryBy">
+					<option value="" disabled="disabled" selected="selected">Select
+						Field</option>
+					<option value="aired_at">AIRED DATE</option>
+					<option value="client_name">CLIENT</option>
+					<option value="channel_name">CHANNEL</option>
+					<option value="city_name">CITY</option>
+					<option value="campaign_name">CAMPAIGN</option>
+					<option value="brand_name">BRAND NAME</option>
+				</select>
+			</div>
+			<div class="container-4" data-ng-show="queryBy!='aired_at'">
+				<input id="search" data-ng-model="query" required="required"
+					type="search" placeholder="Search..." ng-keypress="addHistory(query)" uib-popover="History:{{history}}" data-ng-click="displayHistory(queryBy)" popover-trigger="focus"
+					/>
+				<button class="icon" data-ng-click="addHistory(query)">
+					<i class="fa fa-search"></i>
+				</button>
+                
+			</div>
+			<div class="container-5" data-ng-if="queryBy=='aired_at'" style="width:450px;float:right;overflow:visible;">
+			<div class="row">
+					<div class="col-md-6" >
+						<p class="input-group" >
+							<input type="text" show-weeks="false" class="form-control"
+								uib-datepicker-popup="dd-MMMM-yyyy" ng-model="dt"
+								is-open="popup1.opened" 
+								datepicker-options="dateOptions" ng-required="true"
+								close-text="Close" data-ng-change="cal(dt)"/> <span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="open1()">
+									<i class="glyphicon glyphicon-calendar"></i>
+								</button>
+							</span>
+						</p>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th data-ng-repeat="v1 in tableColumns"><span
+						data-ng-if="v1=='aired_at'">{{v1}} <span
+							data-ng-click="order('aired_at')" class="glyphicon sort-icon"
+							data-ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span></span>
+						<span data-ng-if="v1!='aired_at'">{{v1}}</span></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr data-ng-repeat="spots in filteredTodos">
+					<td>{{spots.id}}</td>
+					<td>{{spots.aired_at| date: 'dd-MMMM-yyyyThh:mm:ss'}}</td>
+					<td>{{spots.duration}}</td>
+					<td>{{spots.client_name}}</td>
+					<td>{{spots.channel_name}}</td>
+					<td>{{spots.city_name}}</td>
+					<td>{{spots.campaign_name}}</td>
+					<td>{{spots.brand_name}}</td>
+					<td><video width="150" height="100" controls>
+  <source data-ng-src="{{spots.video_path}}" type="video/mp4">
+</video>
+					</td>
+					<td><img data-ng-src="{{spots.thumbnail_path}}" class="image" /></td>
+				</tr>
+			</tbody>
+		</table>
+		<uib-pagination ng-model="currentPage" total-items="response.length"
+			max-size="maxSize" boundary-links="true" rotate="false"></uib-pagination>
+	</div>
+</body>
+</html>

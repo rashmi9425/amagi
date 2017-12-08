@@ -1,0 +1,2 @@
+# amagi
+Angular JS Project

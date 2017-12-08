@@ -1,3 +1,2 @@
 # amagi
-# amagi
-# amagi
+An angular project
